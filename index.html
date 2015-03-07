@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="underscore-min.js"></script>
+<script type="text/javascript" src="moment.min.js"></script>
+<script type="text/javascript" src="Chart.min.js"></script>
+<script type="text/javascript">
+  jQuery(function($) {
+
+    // Set global options for Chart.
+    $.extend(Chart.defaults.global, {
+      responsive: true});
+
+    var records = {
+      "push-ups": { "2015-03-01": [{n: 50}],
+                    "2015-03-07": [{n: 20}] },
+      "barbell curls": { "2015-03-07": [ { n: 15, weight: 15}
+                                     , { n: 12, weight: 15 }
+                                     , { n: 8, weight: 15 }
+                                     , { n: 8, weight: 15 } ]
+               },
+      "barbell drag curls" : { "2015-03-07": [ { n: 15, weight: 10 },
+                                       { n: 15, weight: 10 },
+                                       { n: 15, weight: 10 },
+                                       { n: 15, weight: 10 } ]
+                     },
+      "dumbell hammer curls": { "2015-03-07": [ { n: 15, weight: 15 },
+                                                { n: 15, weight: 15 },
+                                                { n: 15, weight: 15 },
+                                                { n: 15, weight: 15 } ]
+                              },
+      "barbell cheat curls": { "2015-03-07": [ { n: 8 , weight: 20 },
+                                               { n: 7 , weight: 20 },
+                                               { n: 6 , weight: 20 },
+                                             ]
+                             }
+
+    };
+
+    var week_str = function(n) {
+      var start  = moment(n, "w"),
+          finish = moment(n, "w").add(6, "days"),
+          start_month = start.format("MMM"),
+          finish_month = finish.format("MMM");
+      if (start_month == finish_month ) {
+        return start.format("D") + " - " + finish.format("D MMM");
+      } else {
+        return start.format("D MMM") + " - " + finish.format("D MMM");
+      }
+
+
+    };
+
+    var chartByWeek = function(chart_id,records) {
+      var start_week = 1, end_week = 20;
+
+
+      var labels = _.map(_.range(start_week,end_week + 1), function(i) {
+        return week_str(i);
+      });
+
+      var data = {
+        labels: labels,
+        datasets: [
+          {
+            label: "My First dataset",
+            fillColor: "rgba(220,220,220,0.5)",
+            strokeColor: "rgba(220,220,220,0.8)",
+            highlightFill: "rgba(220,220,220,0.75)",
+            highlightStroke: "rgba(220,220,220,1)",
+            data: _.map(_.range(1,54), function(n) { return n * 3})
+          }
+
+        ]
+      };
+
+      var ctx = $(chart_id).get(0).getContext("2d");
+      var options = {};
+
+      new Chart(ctx).Bar(data, options);
+
+    };
+
+
+    chartByWeek('#chart', records);
+  });
+
+
+
+</script>
+
+</head>
+<body>
+
+<canvas id="chart"></canvas>
+
+
+</body>
+</html>
+
